@@ -10,240 +10,406 @@
   <link rel="manifest" href="manifest.json" />
 </head>
 <body>
-  <!-- Sidebar Nav -->
-  <nav class="sidebar" id="sidebar">
-    <div class="logo">
-      <span class="logo-icon">⬡</span>
-      <span class="logo-text">DPA</span>
+
+  <!-- ======= SPLASH SCREEN ======= -->
+  <div id="splash">
+    <div class="splash-inner">
+      <div class="splash-logo">
+        <div class="splash-hex">⬡</div>
+        <div class="splash-rings">
+          <div class="ring ring1"></div>
+          <div class="ring ring2"></div>
+          <div class="ring ring3"></div>
+        </div>
+      </div>
+      <div class="splash-title-wrap">
+        <div class="splash-title" id="splashTitle"></div>
+        <div class="splash-cursor" id="splashCursor">|</div>
+      </div>
+      <div class="splash-subtitle">Personal Growth · Productivity · AI-Powered</div>
+      <div class="splash-bar-wrap">
+        <div class="splash-bar" id="splashBar"></div>
+      </div>
+      <div class="splash-status" id="splashStatus">Initializing...</div>
     </div>
-    <ul class="nav-links">
-      <li><a href="#" class="nav-link active" data-tab="dashboard"><span class="nav-icon">◈</span> Dashboard</a></li>
-      <li><a href="#" class="nav-link" data-tab="punch"><span class="nav-icon">◉</span> Punch In/Out</a></li>
-      <li><a href="#" class="nav-link" data-tab="today"><span class="nav-icon">◎</span> Today's Log</a></li>
-      <li><a href="#" class="nav-link" data-tab="monthly"><span class="nav-icon">▦</span> Monthly View</a></li>
-      <li><a href="#" class="nav-link" data-tab="settings"><span class="nav-icon">◧</span> Settings</a></li>
-    </ul>
-    <div class="sidebar-clock" id="sidebarClock"></div>
-  </nav>
+  </div>
 
-  <!-- Main Content -->
-  <main class="main-content">
-    <!-- Header -->
-    <header class="top-bar">
-      <button class="menu-toggle" id="menuToggle">☰</button>
-      <div class="top-bar-title" id="topBarTitle">Dashboard</div>
-      <div class="top-bar-right">
-        <div class="date-display" id="headerDate"></div>
-        <div class="punch-status-badge" id="punchBadge">● CLOCKED OUT</div>
+  <!-- ======= ONBOARDING MODAL ======= -->
+  <div id="onboarding" class="onboarding-overlay">
+    <div class="onboarding-box">
+      <div class="ob-step active" id="ob-step-1">
+        <div class="ob-icon">👋</div>
+        <h2>Welcome to DPA</h2>
+        <p>Let's set up your personal workspace. This takes 30 seconds.</p>
+        <input type="text" id="ob-name" class="form-input" placeholder="Your name (e.g. Rahul)" />
+        <input type="text" id="ob-role" class="form-input" placeholder="Your role (e.g. Data Science Student)" />
+        <button class="btn-primary" id="ob-next-1">Continue →</button>
       </div>
-    </header>
-
-    <!-- Tab: Dashboard -->
-    <section class="tab-content active" id="tab-dashboard">
-      <div class="section-heading">
-        <h1>Good <span id="greetingTime"></span> 👋</h1>
-        <p class="sub">Here's your productivity snapshot</p>
-      </div>
-      <div class="dashboard-grid">
-        <div class="card card-punch">
-          <div class="card-label">Today's Work Time</div>
-          <div class="card-value" id="totalWorkTime">00:00:00</div>
-          <div class="card-sub" id="punchStatusText">Not clocked in</div>
-          <button class="punch-btn" id="mainPunchBtn">PUNCH IN</button>
+      <div class="ob-step" id="ob-step-2">
+        <div class="ob-icon">🤖</div>
+        <h2>Connect Gemini AI</h2>
+        <p>Your key is stored <strong>only on your device</strong>. Nobody else can see it.</p>
+        <input type="password" id="ob-key" class="form-input" placeholder="Paste your Gemini API key..." />
+        <div class="ob-hint">Get a free key at <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a></div>
+        <div class="ob-row">
+          <button class="btn-sm" id="ob-back-2">← Back</button>
+          <button class="btn-primary" id="ob-next-2" style="flex:1">Continue →</button>
         </div>
-        <div class="card card-score">
-          <div class="card-label">Today's Score</div>
-          <div class="score-ring" id="scoreRing">
-            <svg viewBox="0 0 120 120">
-              <circle cx="60" cy="60" r="50" class="ring-bg"/>
-              <circle cx="60" cy="60" r="50" class="ring-fill" id="ringFill" stroke-dasharray="0 314"/>
-            </svg>
-            <div class="score-number" id="scoreNumber">0%</div>
+        <button class="btn-ghost" id="ob-skip-key">Skip for now (AI features disabled)</button>
+      </div>
+      <div class="ob-step" id="ob-step-3">
+        <div class="ob-icon">🎯</div>
+        <h2>Set Your Learning Goal</h2>
+        <p>What skill or field do you want to master? Gemini will build you a complete roadmap.</p>
+        <input type="text" id="ob-goal" class="form-input" placeholder="e.g. Data Science, Web Development, DevOps..." />
+        <input type="number" id="ob-hours" class="form-input" placeholder="Daily study goal (hours, e.g. 2)" min="0.5" max="12" step="0.5" style="margin-top:.5rem" />
+        <div class="ob-row">
+          <button class="btn-sm" id="ob-back-3">← Back</button>
+          <button class="btn-primary" id="ob-next-3" style="flex:1">Generate My Roadmap 🚀</button>
+        </div>
+        <button class="btn-ghost" id="ob-skip-goal">Skip — I'll set this later</button>
+      </div>
+      <div class="ob-step" id="ob-step-4">
+        <div class="ob-icon spin">⚙</div>
+        <h2>Building Your Roadmap...</h2>
+        <p id="ob-gen-status">Asking Gemini to create your personalized learning path...</p>
+        <div class="ob-progress-wrap"><div class="ob-progress-bar" id="obProgressBar"></div></div>
+      </div>
+      <div class="ob-dots">
+        <span class="ob-dot active" data-s="1"></span>
+        <span class="ob-dot" data-s="2"></span>
+        <span class="ob-dot" data-s="3"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= APP SHELL ======= -->
+  <div id="appShell" style="display:none">
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+      <div class="logo">
+        <span class="logo-icon">⬡</span>
+        <span class="logo-text">DPA</span>
+      </div>
+      <div class="user-chip" id="sidebarUser"></div>
+      <ul class="nav-links">
+        <li><a href="#" class="nav-link active" data-tab="dashboard"><span class="nav-icon">◈</span> Dashboard</a></li>
+        <li><a href="#" class="nav-link" data-tab="punch"><span class="nav-icon">◉</span> Punch In/Out</a></li>
+        <li><a href="#" class="nav-link" data-tab="today"><span class="nav-icon">◎</span> Today's Log</a></li>
+        <li><a href="#" class="nav-link" data-tab="roadmap"><span class="nav-icon">🗺</span> Roadmap</a></li>
+        <li><a href="#" class="nav-link" data-tab="monthly"><span class="nav-icon">▦</span> Monthly</a></li>
+        <li><a href="#" class="nav-link" data-tab="settings"><span class="nav-icon">◧</span> Settings</a></li>
+      </ul>
+      <div class="sidebar-clock" id="sidebarClock"></div>
+    </nav>
+
+    <!-- Main -->
+    <main class="main-content">
+      <header class="top-bar">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <div class="top-bar-title" id="topBarTitle">Dashboard</div>
+        <div class="top-bar-right">
+          <div class="date-display" id="headerDate"></div>
+          <div class="punch-status-badge" id="punchBadge">● CLOCKED OUT</div>
+        </div>
+      </header>
+
+      <!-- ===== DASHBOARD ===== -->
+      <section class="tab-content active" id="tab-dashboard">
+        <div class="section-heading">
+          <h1>Good <span id="greetingTime"></span>, <span id="greetingName" class="accent"></span> 👋</h1>
+          <p class="sub">Here's your productivity snapshot</p>
+        </div>
+        <div class="dashboard-grid">
+          <div class="card card-punch">
+            <div class="card-label">Today's Work Time</div>
+            <div class="card-value" id="totalWorkTime">00:00:00</div>
+            <div class="card-sub" id="punchStatusText">Not clocked in</div>
+            <button class="punch-btn" id="mainPunchBtn">PUNCH IN</button>
           </div>
-        </div>
-        <div class="card card-ai">
-          <div class="card-label">AI Insight</div>
-          <div class="ai-text" id="aiInsight">Log your tasks to get AI-powered insights ✦</div>
-          <button class="btn-sm" id="refreshInsight">↻ Refresh</button>
-        </div>
-        <div class="card card-tasks">
-          <div class="card-label">Quick Task Log</div>
-          <div class="quick-input-row">
-            <input type="text" id="quickTask" class="quick-input" placeholder="What did you just do?" />
-            <button class="btn-add" id="quickAddBtn">+</button>
-          </div>
-          <ul class="quick-task-list" id="quickTaskList"></ul>
-        </div>
-        <div class="card card-recommendations">
-          <div class="card-label">⚡ AI Recommendations</div>
-          <div id="recommendationsList" class="rec-list">Ask AI for what you should do next...</div>
-        </div>
-        <div class="card card-streak">
-          <div class="card-label">Productive Streak</div>
-          <div class="streak-value" id="streakValue">0 days</div>
-          <div class="card-sub">Keep it going!</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Tab: Punch In/Out -->
-    <section class="tab-content" id="tab-punch">
-      <div class="section-heading">
-        <h1>Punch <span class="accent">In / Out</span></h1>
-        <p class="sub">Track your work sessions precisely</p>
-      </div>
-      <div class="punch-center">
-        <div class="big-clock" id="bigClock">00:00:00</div>
-        <div class="punch-date" id="punchDate"></div>
-        <div class="work-timer-label">Session Time</div>
-        <div class="work-timer" id="sessionTimer">00:00:00</div>
-        <button class="big-punch-btn" id="bigPunchBtn">PUNCH IN</button>
-        <div class="punch-log-today">
-          <h3>Today's Sessions</h3>
-          <ul id="sessionList" class="session-list"></ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- Tab: Today's Log -->
-    <section class="tab-content" id="tab-today">
-      <div class="section-heading">
-        <h1>Today's <span class="accent">Activity Log</span></h1>
-        <p class="sub">Everything you've accomplished</p>
-      </div>
-      <div class="log-grid">
-        <div class="log-left">
-          <div class="card">
-            <div class="card-label">Add Task / Activity</div>
-            <input type="text" id="taskTitle" class="form-input" placeholder="Task title..." />
-            <textarea id="taskDesc" class="form-textarea" placeholder="Describe what you did..." rows="3"></textarea>
-            <div class="form-row">
-              <select id="taskCategory" class="form-select">
-                <option value="work">💼 Work</option>
-                <option value="learning">📚 Learning</option>
-                <option value="health">🏃 Health</option>
-                <option value="personal">🧘 Personal</option>
-                <option value="creative">🎨 Creative</option>
-                <option value="admin">📋 Admin</option>
-              </select>
-              <input type="number" id="taskDuration" class="form-input-sm" placeholder="Min" min="1" max="480" />
+          <div class="card card-score">
+            <div class="card-label">Today's Score</div>
+            <div class="score-ring">
+              <svg viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="50" class="ring-bg"/>
+                <circle cx="60" cy="60" r="50" class="ring-fill" id="ringFill" stroke-dasharray="0 314"/>
+              </svg>
+              <div class="score-number" id="scoreNumber">0%</div>
             </div>
-            <button class="btn-primary" id="addTaskBtn">+ Log Activity</button>
           </div>
-          <div class="card" style="margin-top:1rem">
-            <div class="card-label">Productivity Score</div>
-            <div class="score-breakdown" id="scoreBreakdown">Log activities to see breakdown</div>
+          <div class="card card-study-today">
+            <div class="card-label">📚 Study Today</div>
+            <div class="study-topic-display" id="studyTodayDisplay">
+              <div class="std-topic" id="stdTopic">Set up your roadmap to get study suggestions</div>
+              <div class="std-why" id="stdWhy"></div>
+              <button class="btn-sm" id="stdGoBtn" style="margin-top:.8rem;display:none">Go to Roadmap →</button>
+            </div>
+          </div>
+          <div class="card card-ai">
+            <div class="card-label">✦ AI Insight</div>
+            <div class="ai-text" id="aiInsight">Log your tasks to get AI-powered insights.</div>
+            <button class="btn-sm" id="refreshInsight">↻ Refresh</button>
+          </div>
+          <div class="card card-tasks">
+            <div class="card-label">Quick Task Log</div>
+            <div class="quick-input-row">
+              <input type="text" id="quickTask" class="quick-input" placeholder="What did you just do?" />
+              <button class="btn-add" id="quickAddBtn">+</button>
+            </div>
+            <ul class="quick-task-list" id="quickTaskList"></ul>
+          </div>
+          <div class="card card-recommendations">
+            <div class="card-label">⚡ AI Recommendations</div>
+            <div id="recommendationsList" class="rec-list">Click below to get personalized suggestions.</div>
+            <button class="btn-sm" id="getRecsBtn" style="margin-top:.8rem">✦ Get Recommendations</button>
+          </div>
+          <div class="card card-roadmap-progress">
+            <div class="card-label">🗺 Roadmap Progress</div>
+            <div id="dashRoadmapProgress">
+              <div class="no-roadmap-msg" id="noRoadmapMsg">No roadmap yet. <a href="#" onclick="APP.switchTab('roadmap')">Create one →</a></div>
+              <div id="roadmapProgressDisplay" style="display:none">
+                <div class="rp-goal" id="rpGoal"></div>
+                <div class="rp-bar-wrap"><div class="rp-bar" id="rpBar"></div></div>
+                <div class="rp-pct" id="rpPct">0% complete</div>
+                <div class="rp-next" id="rpNext"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card card-streak">
+            <div class="card-label">🔥 Streak</div>
+            <div class="streak-value" id="streakValue">0 days</div>
+            <div class="card-sub">Keep it going!</div>
           </div>
         </div>
-        <div class="log-right">
+      </section>
+
+      <!-- ===== PUNCH ===== -->
+      <section class="tab-content" id="tab-punch">
+        <div class="section-heading">
+          <h1>Punch <span class="accent">In / Out</span></h1>
+          <p class="sub">Track your work sessions precisely</p>
+        </div>
+        <div class="punch-center">
+          <div class="big-clock" id="bigClock">00:00:00</div>
+          <div class="punch-date" id="punchDate"></div>
+          <div class="work-timer-label">Session Time</div>
+          <div class="work-timer" id="sessionTimer">00:00:00</div>
+          <button class="big-punch-btn" id="bigPunchBtn">PUNCH IN</button>
+          <div class="punch-log-today">
+            <h3>Today's Sessions</h3>
+            <ul id="sessionList" class="session-list"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== TODAY LOG ===== -->
+      <section class="tab-content" id="tab-today">
+        <div class="section-heading">
+          <h1>Today's <span class="accent">Activity Log</span></h1>
+          <p class="sub">Everything you've accomplished today</p>
+        </div>
+        <div class="log-grid">
+          <div class="log-left">
+            <div class="card">
+              <div class="card-label">Add Task / Activity</div>
+              <input type="text" id="taskTitle" class="form-input" placeholder="Task title..." />
+              <textarea id="taskDesc" class="form-textarea" placeholder="Describe what you did..." rows="3"></textarea>
+              <div class="form-row">
+                <select id="taskCategory" class="form-select">
+                  <option value="work">💼 Work</option>
+                  <option value="learning">📚 Learning</option>
+                  <option value="health">🏃 Health</option>
+                  <option value="personal">🧘 Personal</option>
+                  <option value="creative">🎨 Creative</option>
+                  <option value="admin">📋 Admin</option>
+                </select>
+                <input type="number" id="taskDuration" class="form-input-sm" placeholder="Min" min="1" max="480" />
+              </div>
+              <div class="study-link-row" id="studyLinkRow" style="display:none">
+                <label class="checkbox-row">
+                  <input type="checkbox" id="linkToRoadmap" />
+                  <span>Link to roadmap topic</span>
+                </label>
+                <select id="roadmapTopicLink" class="form-select" style="margin-top:.4rem;display:none"></select>
+              </div>
+              <button class="btn-primary" id="addTaskBtn">+ Log Activity</button>
+            </div>
+            <div class="card" style="margin-top:1rem">
+              <div class="card-label">Productivity Score</div>
+              <div class="score-breakdown" id="scoreBreakdown">Log activities to see breakdown</div>
+            </div>
+          </div>
+          <div class="log-right">
+            <div class="card">
+              <div class="card-label">Today's Activities <span id="activityCount" class="badge">0</span></div>
+              <div id="todayTaskList" class="task-timeline"></div>
+              <div id="emptyState" class="empty-state">No activities logged yet.<br/>Start by adding a task! ✦</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== ROADMAP ===== -->
+      <section class="tab-content" id="tab-roadmap">
+        <div class="section-heading">
+          <h1>Learning <span class="accent">Roadmap</span></h1>
+          <p class="sub">Your AI-generated personal learning path</p>
+        </div>
+        <!-- No roadmap state -->
+        <div id="noRoadmapState" style="display:none">
+          <div class="card create-roadmap-card">
+            <div class="crm-icon">🗺</div>
+            <h2>Create Your Learning Roadmap</h2>
+            <p>Tell Gemini what you want to learn. It will build you a complete, structured roadmap.</p>
+            <input type="text" id="newGoalInput" class="form-input" placeholder="e.g. Data Science, Flutter, Machine Learning, DevOps..." />
+            <input type="number" id="newGoalHours" class="form-input" placeholder="Daily study hours (e.g. 2)" min="0.5" max="12" step="0.5" style="margin-top:.5rem" />
+            <button class="btn-primary" id="generateRoadmapBtn">🚀 Generate My Roadmap</button>
+          </div>
+        </div>
+        <!-- Roadmap exists -->
+        <div id="roadmapState" style="display:none">
+          <div class="roadmap-header-bar">
+            <div class="roadmap-meta">
+              <span class="rm-goal-label" id="rmGoalLabel"></span>
+              <span class="rm-progress-label" id="rmProgressLabel">0% complete</span>
+            </div>
+            <div class="roadmap-actions">
+              <button class="btn-sm" id="rmAskNextBtn">🤖 What's Next?</button>
+              <button class="btn-sm" id="rmNewGoalBtn">↺ New Goal</button>
+            </div>
+          </div>
+          <div class="rm-overall-bar-wrap">
+            <div class="rm-overall-bar" id="rmOverallBar"></div>
+          </div>
+          <div class="rm-ai-panel" id="rmAiPanel" style="display:none">
+            <div class="card-label">🤖 AI Guidance</div>
+            <div class="ai-text" id="rmAiText"></div>
+          </div>
+          <div id="roadmapPhases" class="roadmap-phases"></div>
+          <div class="rm-regenerate-row">
+            <button class="btn-sm" id="rmRegenerateBtn">↺ Regenerate Roadmap</button>
+          </div>
+        </div>
+        <!-- Loading state -->
+        <div id="roadmapLoading" style="display:none">
+          <div class="card" style="text-align:center;padding:3rem">
+            <div class="loading-hex">⬡</div>
+            <div class="loading-text" id="roadmapLoadingText">Generating your roadmap...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== MONTHLY ===== -->
+      <section class="tab-content" id="tab-monthly">
+        <div class="section-heading">
+          <h1>Monthly <span class="accent">Overview</span></h1>
+          <p class="sub">Your productivity patterns across the month</p>
+        </div>
+        <div class="month-controls">
+          <button class="btn-sm" id="prevMonth">← Prev</button>
+          <span id="monthLabel" class="month-label"></span>
+          <button class="btn-sm" id="nextMonth">Next →</button>
+        </div>
+        <div class="monthly-grid">
+          <div class="card monthly-summary">
+            <div class="card-label">Month Summary</div>
+            <div class="stats-row">
+              <div class="stat-box"><span class="stat-num" id="monthAvgScore">0%</span><span class="stat-lbl">Avg Score</span></div>
+              <div class="stat-box"><span class="stat-num" id="monthTotalHours">0h</span><span class="stat-lbl">Total Hours</span></div>
+              <div class="stat-box"><span class="stat-num" id="monthProductiveDays">0</span><span class="stat-lbl">Productive Days</span></div>
+              <div class="stat-box"><span class="stat-num" id="monthBestDay">—</span><span class="stat-lbl">Best Day</span></div>
+            </div>
+          </div>
           <div class="card">
-            <div class="card-label">Today's Activities <span id="activityCount" class="badge">0</span></div>
-            <div id="todayTaskList" class="task-timeline"></div>
-            <div id="emptyState" class="empty-state">No activities logged yet.<br/>Start by adding a task! ✦</div>
+            <div class="card-label">Daily Productivity Heatmap</div>
+            <div id="calendarHeatmap" class="calendar-heatmap"></div>
+          </div>
+          <div class="card monthly-ai-card">
+            <div class="card-label">🤖 Monthly AI Analysis</div>
+            <div id="monthlyAiAnalysis" class="ai-text">Click below to get your monthly AI analysis...</div>
+            <button class="btn-primary" id="getMonthlyAnalysis">Get AI Analysis</button>
+          </div>
+          <div class="card">
+            <div class="card-label">Category Breakdown</div>
+            <div id="categoryChart" class="category-chart"></div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Tab: Monthly View -->
-    <section class="tab-content" id="tab-monthly">
-      <div class="section-heading">
-        <h1>Monthly <span class="accent">Overview</span></h1>
-        <p class="sub">Your productivity patterns across the month</p>
-      </div>
-      <div class="month-controls">
-        <button class="btn-sm" id="prevMonth">← Prev</button>
-        <span id="monthLabel" class="month-label"></span>
-        <button class="btn-sm" id="nextMonth">Next →</button>
-      </div>
-      <div class="monthly-grid">
-        <div class="card monthly-summary">
-          <div class="card-label">Month Summary</div>
-          <div class="stats-row">
-            <div class="stat-box"><span class="stat-num" id="monthAvgScore">0%</span><span class="stat-lbl">Avg Score</span></div>
-            <div class="stat-box"><span class="stat-num" id="monthTotalHours">0h</span><span class="stat-lbl">Total Hours</span></div>
-            <div class="stat-box"><span class="stat-num" id="monthProductiveDays">0</span><span class="stat-lbl">Productive Days</span></div>
-            <div class="stat-box"><span class="stat-num" id="monthBestDay">—</span><span class="stat-lbl">Best Day</span></div>
+      <!-- ===== SETTINGS ===== -->
+      <section class="tab-content" id="tab-settings">
+        <div class="section-heading">
+          <h1>Settings <span class="accent">&amp; Config</span></h1>
+          <p class="sub">Personalize your experience</p>
+        </div>
+        <div class="settings-grid">
+          <div class="card">
+            <div class="card-label">Your Profile</div>
+            <input type="text" id="userName" class="form-input" placeholder="Your name..." />
+            <input type="text" id="userRole" class="form-input" placeholder="Your role..." style="margin-top:.5rem" />
+            <input type="number" id="dailyGoalHours" class="form-input" placeholder="Daily work goal (hours)" style="margin-top:.5rem" min="1" max="24" />
+            <button class="btn-primary" id="saveProfile">Save Profile</button>
+          </div>
+          <div class="card">
+            <div class="card-label">Gemini API Key</div>
+            <p class="setting-desc">Stored only on your device. Never shared.</p>
+            <input type="password" id="geminiKey" class="form-input" placeholder="Enter your Gemini API key..." />
+            <button class="btn-primary" id="saveGeminiKey">Save Key</button>
+            <div class="setting-hint">Get your free key at <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com</a></div>
+          </div>
+          <div class="card">
+            <div class="card-label">Notification Settings</div>
+            <div class="toggle-row">
+              <span>2-Hour Reminder Notifications</span>
+              <label class="toggle"><input type="checkbox" id="notifToggle" checked /><span class="slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <span>Reminder Interval</span>
+              <select id="reminderInterval" class="form-select-sm">
+                <option value="60">Every 1 hour</option>
+                <option value="120" selected>Every 2 hours</option>
+                <option value="180">Every 3 hours</option>
+              </select>
+            </div>
+            <button class="btn-primary" id="requestNotif">Enable Notifications</button>
+          </div>
+          <div class="card">
+            <div class="card-label">Data Management</div>
+            <button class="btn-primary" id="exportData">⬇ Export All Data (JSON)</button>
+            <button class="btn-danger" id="clearData" style="margin-top:.5rem">✕ Clear All Data</button>
+            <div class="setting-hint">Data stored locally in your browser (localStorage)</div>
           </div>
         </div>
-        <div class="card">
-          <div class="card-label">Daily Productivity Heatmap</div>
-          <div id="calendarHeatmap" class="calendar-heatmap"></div>
-        </div>
-        <div class="card monthly-ai-card">
-          <div class="card-label">🤖 Monthly AI Analysis</div>
-          <div id="monthlyAiAnalysis" class="ai-text">Click below to get your monthly AI analysis...</div>
-          <button class="btn-primary" id="getMonthlyAnalysis">Get AI Analysis</button>
-        </div>
-        <div class="card">
-          <div class="card-label">Category Breakdown</div>
-          <div id="categoryChart" class="category-chart"></div>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Tab: Settings -->
-    <section class="tab-content" id="tab-settings">
-      <div class="section-heading">
-        <h1>Settings <span class="accent">&amp; Config</span></h1>
-        <p class="sub">Personalize your experience</p>
-      </div>
-      <div class="settings-grid">
-        <div class="card">
-          <div class="card-label">Gemini API Key</div>
-          <p class="setting-desc">Required for AI insights, recommendations, and analysis.</p>
-          <input type="password" id="geminiKey" class="form-input" placeholder="Enter your Gemini API key..." />
-          <button class="btn-primary" id="saveGeminiKey">Save Key</button>
-          <div class="setting-hint">Get your key free at <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com</a></div>
-        </div>
-        <div class="card">
-          <div class="card-label">Notification Settings</div>
-          <div class="toggle-row">
-            <span>2-Hour Reminder Notifications</span>
-            <label class="toggle"><input type="checkbox" id="notifToggle" checked /><span class="slider"></span></label>
-          </div>
-          <div class="toggle-row">
-            <span>Reminder Interval</span>
-            <select id="reminderInterval" class="form-select-sm">
-              <option value="60">Every 1 hour</option>
-              <option value="120" selected>Every 2 hours</option>
-              <option value="180">Every 3 hours</option>
-            </select>
-          </div>
-          <button class="btn-primary" id="requestNotif">Enable Notifications</button>
-        </div>
-        <div class="card">
-          <div class="card-label">Your Profile</div>
-          <input type="text" id="userName" class="form-input" placeholder="Your name..." />
-          <input type="text" id="userRole" class="form-input" placeholder="Your role (e.g. Developer)..." style="margin-top:.5rem" />
-          <input type="number" id="dailyGoalHours" class="form-input" placeholder="Daily work goal (hours, e.g. 8)" style="margin-top:.5rem" min="1" max="24" />
-          <button class="btn-primary" id="saveProfile">Save Profile</button>
-        </div>
-        <div class="card">
-          <div class="card-label">Data Management</div>
-          <button class="btn-primary" id="exportData">⬇ Export All Data (JSON)</button>
-          <button class="btn-danger" id="clearData" style="margin-top:.5rem">✕ Clear All Data</button>
-          <div class="setting-hint">Data is stored locally in your browser (localStorage)</div>
-        </div>
-      </div>
-    </section>
-  </main>
+    </main>
+  </div><!-- end appShell -->
 
-  <!-- 2-Hour Notification Modal -->
+  <!-- ======= 2-HOUR CHECK-IN MODAL ======= -->
   <div class="modal-overlay" id="notifModal">
     <div class="modal">
       <div class="modal-icon">⏱</div>
-      <h2>2-Hour Check-in!</h2>
+      <h2>Check-in Time!</h2>
       <p>What have you accomplished in the last <span id="notifInterval">2</span> hours?</p>
-      <textarea id="notifTaskInput" class="form-textarea" placeholder="List your activities... (one per line)" rows="5"></textarea>
+      <textarea id="notifTaskInput" class="form-textarea" placeholder="List your activities... (one per line)" rows="4"></textarea>
+      <div class="notif-study-row" id="notifStudyRow" style="display:none">
+        <div class="card-label" style="margin-top:.8rem">📚 Roadmap Progress?</div>
+        <p style="font-size:.78rem;color:var(--text2);font-family:var(--font-mono)">Did you study your roadmap topic?</p>
+        <select id="notifTopicSelect" class="form-select"></select>
+        <label class="checkbox-row" style="margin-top:.4rem">
+          <input type="checkbox" id="notifTopicDone" />
+          <span>Mark this topic as complete</span>
+        </label>
+      </div>
       <div class="modal-actions">
-        <button class="btn-primary" id="notifSubmit">Log & Analyze</button>
+        <button class="btn-primary" id="notifSubmit">Log & Analyze ✦</button>
         <button class="btn-sm" id="notifSkip">Skip for now</button>
       </div>
     </div>
   </div>
 
-  <!-- Toast -->
+  <!-- ======= TOAST ======= -->
   <div class="toast" id="toast"></div>
 
   <script src="js/app.js"></script>
