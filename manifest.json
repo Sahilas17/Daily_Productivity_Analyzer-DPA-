@@ -2,7 +2,8 @@
   "name": "Daily Productivity Analyzer",
   "short_name": "DPA",
   "description": "Track productivity with AI insights and learning roadmaps",
-  "start_url": "/",
+  "start_url": "./",
+  "scope": "./"
   "display": "standalone",
   "background_color": "#0a0a0f",
   "theme_color": "#b4f542",
